@@ -1,0 +1,252 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday 🐼🎂</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:linear-gradient(135deg,#ffd6f6,#c9f0ff);
+overflow:hidden;
+text-align:center;
+}
+
+h1{
+margin-top:20px;
+font-size:40px;
+}
+
+.panda{
+font-size:110px;
+animation:wave 2s infinite;
+}
+
+@keyframes wave{
+0%,100%{transform:rotate(0)}
+50%{transform:rotate(-6deg)}
+}
+
+.instructions{
+margin-top:5px;
+font-size:18px;
+}
+
+.area{
+position:relative;
+width:100%;
+height:65vh;
+}
+
+.butterfly{
+position:absolute;
+font-size:26px;
+cursor:pointer;
+animation:fly linear infinite;
+}
+
+@keyframes fly{
+0%{transform:translateY(100vh)}
+100%{transform:translateY(-20vh)}
+}
+
+.gift{
+font-size:80px;
+cursor:pointer;
+margin-top:10px;
+transition:transform .3s;
+}
+
+.gift:hover{
+transform:scale(1.2);
+}
+
+.popup{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:white;
+padding:25px;
+border-radius:15px;
+box-shadow:0 10px 30px rgba(0,0,0,.2);
+display:none;
+width:280px;
+z-index:5;
+}
+
+button{
+margin-top:10px;
+padding:8px 14px;
+border:none;
+border-radius:8px;
+background:#ff7cd3;
+color:white;
+cursor:pointer;
+}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+pointer-events:none;
+}
+
+.final{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+color:white;
+z-index:20;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+}
+
+.final h2{
+font-size:45px;
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<h1>Happy Birthday 🎉</h1>
+
+<div class="panda">🐼</div>
+
+<div class="instructions">
+Tap 5 butterflies to unlock the surprise 🦋
+</div>
+
+<div class="area" id="gameArea"></div>
+
+<div id="gift" class="gift" style="display:none;">🎁</div>
+
+<div id="letterPopup" class="popup">
+<h2>Birthday Letter 💌</h2>
+<p>Wishing you a day full of happiness, laughter, and unforgettable moments. You deserve the best birthday ever!</p>
+<button onclick="showCake()">Next Surprise 🎂</button>
+</div>
+
+<div id="cakePopup" class="popup">
+<h2>Birthday Cake 🎂</h2>
+<p>Make a wish and tap the button!</p>
+<button onclick="startFireworks()">Celebrate 🎆</button>
+</div>
+
+<div id="final" class="final">
+<h2>🎉 HAPPY BIRTHDAY 🎉</h2>
+<div style="font-size:90px">🐼🎂🦋</div>
+<p>Hope your day is amazing!</p>
+</div>
+
+<script>
+
+/* BUTTERFLY GAME */
+
+let area=document.getElementById("gameArea")
+let caught=0
+
+for(let i=0;i<10;i++){
+
+let b=document.createElement("div")
+b.className="butterfly"
+b.innerHTML="🦋"
+
+b.style.left=Math.random()*90+"vw"
+b.style.animationDuration=(6+Math.random()*4)+"s"
+
+b.onclick=()=>{
+b.remove()
+caught++
+
+if(caught>=5){
+document.getElementById("gift").style.display="block"
+}
+}
+
+area.appendChild(b)
+
+}
+
+/* GIFT */
+
+document.getElementById("gift").onclick=()=>{
+document.getElementById("letterPopup").style.display="block"
+}
+
+/* LETTER -> CAKE */
+
+function showCake(){
+
+document.getElementById("letterPopup").style.display="none"
+document.getElementById("cakePopup").style.display="block"
+
+}
+
+/* FIREWORKS */
+
+const canvas=document.getElementById("fireworks")
+const ctx=canvas.getContext("2d")
+
+canvas.width=window.innerWidth
+canvas.height=window.innerHeight
+
+let particles=[]
+
+function startFireworks(){
+
+document.getElementById("cakePopup").style.display="none"
+
+for(let i=0;i<120;i++){
+particles.push({
+x:canvas.width/2,
+y:canvas.height/2,
+vx:(Math.random()-0.5)*8,
+vy:(Math.random()-0.5)*8,
+life:100
+})
+}
+
+animate()
+
+setTimeout(()=>{
+document.getElementById("final").style.display="flex"
+},2000)
+
+}
+
+function animate(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+particles.forEach(p=>{
+ctx.fillRect(p.x,p.y,4,4)
+p.x+=p.vx
+p.y+=p.vy
+p.life--
+})
+
+particles=particles.filter(p=>p.life>0)
+
+requestAnimationFrame(animate)
+
+}
+
+</script>
+
+</body>
+</html>
+```
